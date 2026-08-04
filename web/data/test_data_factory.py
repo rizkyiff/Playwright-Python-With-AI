@@ -26,11 +26,30 @@ COMPANY_TYPES = [
 ]
 
 
+INDONESIAN_REGIONS = [
+    {
+        "province": "DKI JAKARTA",
+        "city": "JAKARTA UTARA",
+        "district": "KELAPA GADING",
+        "zone": "KELAPA GADING BARAT",
+        "postal_code": "14240",
+    },
+    {
+        "province": "DKI JAKARTA",
+        "city": "JAKARTA SELATAN",
+        "district": "MAMPANG PRAPATAN",
+        "zone": "KUNINGAN BARAT",
+        "postal_code": "12710",
+    },
+]
+
+
 def generate_deterministic_company_data() -> dict:
     """Generate realistic Indonesian business data using Faker (max 30 chars for company name)."""
     unique_suffix = random.randint(1000, 9999)
     # Ensure company_name length is max 30 characters
     company_name = f"PT QA {fake.first_name()} {unique_suffix}"[:30]
+    region = random.choice(INDONESIAN_REGIONS)
     
     data = {
         "company_name": company_name,
@@ -41,15 +60,14 @@ def generate_deterministic_company_data() -> dict:
         "language": "Indonesia",
         "street_address": fake.street_address(),
         "country": "Indonesia",
-        "province": "DKI JAKARTA",
-        "city": "JAKARTA UTARA",
-        "district": "KELAPA GADING",
-        "zone": "KELAPA GADING BARAT",
-        "postal_code": f"{random.randint(10000, 99999)}",
+        "province": region["province"],
+        "city": region["city"],
+        "district": region["district"],
+        "zone": region["zone"],
+        "postal_code": region["postal_code"],
         "branch_name": f"Cabang {fake.city()}"[:30],
 
     }
-    
     # Validate with schema
     validated = CompanyData(**data)
     return validated.model_dump()
@@ -59,17 +77,30 @@ def get_company_data() -> dict:
     """
     Retrieves company test data. Uses AI generator if AI_API_KEY is configured,
     otherwise falls back to deterministic Faker data generation with log message.
+    Logs generated data to console.
     """
     ai_api_key = os.getenv("AI_API_KEY")
+    data = None
+
     if ai_api_key:
+        print("\n[AI Data Factory] AI_API_KEY detected. Invoking AI Data Generator...")
         logger.info("[AI Data Factory] AI_API_KEY detected. Using AI test data generator.")
         try:
-            return generate_deterministic_company_data()
+            from ai.generated_data import generate_ai_company_data
+            data = generate_ai_company_data(ai_api_key)
         except Exception as e:
+            print(f"[AI Data Factory] AI Generator encountered error/fallback: {e}")
             logger.warning(f"[AI Data Factory] Error in AI generation ({e}). Falling back to Faker.")
-            return generate_deterministic_company_data()
+            print("[AI Data Factory] Using deterministic Faker data generator fallback.")
+            data = generate_deterministic_company_data()
     else:
-        print("[AI Data Factory] AI_API_KEY not configured (empty). Falling back to deterministic Faker data generator.")
+        print("\n[AI Data Factory] AI_API_KEY not configured. Falling back to deterministic Faker data generator.")
         logger.info("[AI Data Factory] AI_API_KEY not configured. Falling back to deterministic Faker data generator.")
-        return generate_deterministic_company_data()
+        data = generate_deterministic_company_data()
 
+    print("\n=================== [COMPANY TEST DATA USED] ===================")
+    for key, value in data.items():
+        print(f"  {key:<16}: {value}")
+    print("=================================================================\n")
+
+    return data

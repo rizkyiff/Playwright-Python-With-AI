@@ -1,9 +1,12 @@
-<<<<<<< HEAD
-# Playwright-Python-With-AI
-=======
 # eSuite Web Automation Framework
 
-Framework otomatisasi pengujian web untuk **eSuite (https://esuite.edot.id)** menggunakan **Python**, **Playwright**, **Pytest**, dan **Allure Report**.
+[![Web Automation CI/CD & Allure Report](https://github.com/rizkyiff/Playwright-Python-With-AI/actions/workflows/web_automation.yml/badge.svg)](https://github.com/rizkyiff/Playwright-Python-With-AI/actions/workflows/web_automation.yml)
+[![Live Allure Report](https://img.shields.io/badge/Allure%20Report-Live%20GitHub%20Pages-brightgreen)](https://rizkyiff.github.io/Playwright-Python-With-AI/)
+
+Framework otomatisasi pengujian web untuk **eSuite (https://esuite.edot.id)** menggunakan **Python**, **Playwright**, **Pytest**, **Allure Report**, dan **GitHub Actions CI/CD**.
+
+> 🌐 **Live Allure Report (GitHub Pages)**: [https://rizkyiff.github.io/Playwright-Python-With-AI/](https://rizkyiff.github.io/Playwright-Python-With-AI/)  
+> Reports are automatically generated, updated with historical trends, and published to the `gh-pages` branch on every test run!
 
 ---
 

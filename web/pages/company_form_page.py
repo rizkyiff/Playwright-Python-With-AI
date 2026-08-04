@@ -46,7 +46,8 @@ class CompanyFormPage(BasePage):
         page.get_by_role("option", name=data.get("country", "Indonesia")).click()
 
         page.get_by_role("combobox").filter(has_text="Choose Province").click()
-        page.get_by_role("textbox", name="Search").fill("dki")
+        prov_search = data.get("province", "DKI JAKARTA")[:4].lower()
+        page.get_by_role("textbox", name="Search").fill(prov_search)
         page.get_by_role("option", name=data.get("province", "DKI JAKARTA")).click()
 
         page.get_by_role("combobox").filter(has_text="Choose City").click()
@@ -101,7 +102,8 @@ class CompanyFormPage(BasePage):
         page.get_by_role("option", name=data.get("country", "Indonesia")).click()
 
         page.get_by_role("combobox").filter(has_text="Choose Province").click()
-        page.get_by_role("textbox", name="Search").fill("dki")
+        prov_search = data.get("province", "DKI JAKARTA")[:4].lower()
+        page.get_by_role("textbox", name="Search").fill(prov_search)
         page.get_by_role("option", name=data.get("province", "DKI JAKARTA")).click()
 
         page.get_by_role("combobox").filter(has_text="Choose City").click()
