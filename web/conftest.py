@@ -67,13 +67,26 @@ def logged_in_state(playwright, request):
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
     """
-    Pytest hook wrapper to automatically capture PNG screenshot on failure
-    and attach it directly to the Allure report.
+    Pytest hook wrapper to automatically capture PNG screenshot on failure,
+    invoke AI Failure Triage diagnostic, and attach it to Allure report.
     """
     outcome = yield
     report = outcome.get_result()
 
     if report.when == "call" and report.failed:
+        # Trigger AI Failure Triage analysis
+        try:
+            from ai.failure_triage import triage_failure
+            exception_text = str(report.longrepr)
+            diagnosis = triage_failure(exception_text)
+            allure.attach(
+                diagnosis,
+                name="AI Failure Triage Analysis",
+                attachment_type=allure.attachment_type.TEXT,
+            )
+        except Exception as triage_err:
+            print(f"[AI Failure Triage] Error executing triage hook: {triage_err}")
+
         page = item.funcargs.get("page")
         if page:
             try:
