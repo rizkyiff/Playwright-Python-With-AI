@@ -34,13 +34,16 @@ def generate_ai_company_data(api_key: str) -> dict:
     print("\n[AI Generator] Requesting AI Model for test data generation...")
     print(f"[AI Generator] Prompt Sent:\n{prompt}")
 
-    url = "https://api.openai.com/v1/chat/completions"
+    base_url = os.getenv("AI_BASE_URL", "https://ai.sumopod.com/v1").rstrip("/")
+    ai_model = os.getenv("AI_MODEL", "gpt-4o-mini")
+
+    url = f"{base_url}/chat/completions"
     headers = {
         "Content-Type": "application/json",
         "Authorization": f"Bearer {api_key}",
     }
     payload = {
-        "model": "gpt-3.5-turbo",
+        "model": ai_model,
         "messages": [{"role": "user", "content": prompt}],
         "temperature": 0.7,
         "response_format": {"type": "json_object"},

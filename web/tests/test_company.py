@@ -55,7 +55,7 @@ def test_create_company_and_verify_detail(browser, logged_in_state):
     detail_page.assert_company_detail_matches(company_data)
 
     # Clean up (Mandatory cleanup step for shared env)
-    form_page.delete_created_company(company_data["company_name"])
+    form_page.delete_created_company(company_data["company_namettd"])
 
     context.close()
 

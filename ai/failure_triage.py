@@ -24,13 +24,15 @@ def triage_failure(exception_info: str) -> str:
     if ai_api_key:
         print("[AI Failure Triage] AI_API_KEY detected. Invoking AI Triage Model...")
         try:
-            url = "https://api.openai.com/v1/chat/completions"
+            base_url = os.getenv("AI_BASE_URL", "https://ai.sumopod.com/v1").rstrip("/")
+            ai_model = os.getenv("AI_MODEL", "gpt-4o-mini")
+            url = f"{base_url}/chat/completions"
             headers = {
                 "Content-Type": "application/json",
                 "Authorization": f"Bearer {ai_api_key}",
             }
             payload = {
-                "model": "gpt-3.5-turbo",
+                "model": ai_model,
                 "messages": [
                     {
                         "role": "system",
