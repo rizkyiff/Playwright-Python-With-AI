@@ -136,7 +136,6 @@ class CompanyFormPage(BasePage):
         page.wait_for_load_state("networkidle")
 
         company_name = data["company_name"]
-
         company_elem = page.get_by_text(re.compile(re.escape(company_name))).first
         company_elem.wait_for(state="visible", timeout=15000)
         company_elem.click()
@@ -148,44 +147,32 @@ class CompanyFormPage(BasePage):
         if "/companies" not in page.url:
             page.goto(f"{BASE_URL}/companies")
 
-        # 2. Click Manage button using exact ancestor XPath: //*[text()='<COMPANY_NAME>']/ancestor::div[2]//button[text()='Manage']
+        # 2. Click Manage button: //*[contains(text(), '<COMPANY_NAME>')]/ancestor::div[2]//button[text()='Manage']
         manage_btn = page.locator(
-            f"//*[text()='{company_name}']/ancestor::div[2]//button[text()='Manage']"
-        ).or_(page.get_by_role("button", name="Manage")).first
+            f"//*[contains(text(), '{company_name}')]/ancestor::div[2]//button[text()='Manage']"
+        ).first
         manage_btn.wait_for(state="visible", timeout=10000)
         manage_btn.click()
         page.wait_for_timeout(1500)
 
-        # 3. Click Delete button: //button[text()='Delete'] or button containing Delete
-        delete_btn = page.locator(
-            f"//*[text()='{company_name}']/ancestor::div[2]//button[text()='Delete']"
-        ).or_(
-            page.locator("//button[text()='Delete'] | //button[contains(text(),'Delete')]")
-        ).or_(
-            page.get_by_role("button", name="Delete")
-        ).first
+        # 3. Click Delete button: //button[text()='Delete']
+        delete_btn = page.locator("//button[text()='Delete']").first
         delete_btn.wait_for(state="visible", timeout=10000)
         delete_btn.click()
 
         # 4. Agreement checkbox: //*[text()='I understand & agree to delete']/preceding-sibling::*
         agree_cb = page.locator(
             "//*[text()='I understand & agree to delete']/preceding-sibling::*"
-        ).or_(
-            page.get_by_text("I understand & agree to delete")
         ).first
         if agree_cb.is_visible(timeout=5000):
             agree_cb.click()
 
         # 5. Click Confirm button: //button[text()='Confirm']
-        confirm_btn = page.locator(
-            "//button[text()='Confirm'] | //button[contains(text(),'Confirm')]"
-        ).or_(
-            page.get_by_role("button", name="Confirm")
-        ).first
+        confirm_btn = page.locator("//button[text()='Confirm']").first
         if confirm_btn.is_visible(timeout=5000):
             confirm_btn.click()
 
         # 6. Post-submit validation: Check if company name is deleted and no longer visible
         page.wait_for_timeout(2000)
         page.goto(f"{BASE_URL}/companies")
-        expect(page.locator(f"//*[text()='{company_name}']")).not_to_be_visible(timeout=10000)
+        expect(page.locator(f"//*[contains(text(), '{company_name}')]")).not_to_be_visible(timeout=10000)
