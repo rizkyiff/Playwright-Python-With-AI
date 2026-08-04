@@ -49,21 +49,32 @@ jobs:
         run: |
           pytest web/tests --alluredir=allure-results
 
-      - name: Get Allure History
+      - name: Install Allure CLI & Java
+        if: always()
+        run: |
+          sudo apt-get update && sudo apt-get install -y default-jre
+          wget https://github.com/allure-framework/allure2/releases/download/2.29.0/allure-2.29.0.tgz
+          tar -zxvf allure-2.29.0.tgz
+          sudo mv allure-2.29.0 /opt/allure
+          sudo ln -s /opt/allure/bin/allure /usr/local/bin/allure
+          allure --version
+
+      - name: Get Previous Allure History from gh-pages Branch
         uses: actions/checkout@v4
         if: always()
         continue-on-error: true
         with:
           ref: gh-pages
-          path: gh-pages
+          path: gh-pages-dir
 
       - name: Generate Allure Report with History Trend
-        uses: simple-elf/allure-report-action@v1.9
         if: always()
-        with:
-          allure_results: allure-results
-          allure_history: allure-history
-          keep_reports: 30
+        run: |
+          mkdir -p allure-results/history
+          if [ -d "gh-pages-dir/history" ]; then
+            cp -r gh-pages-dir/history/* allure-results/history/ || true
+          fi
+          allure generate allure-results -o allure-report --clean
 
       - name: Deploy Allure Report to GitHub Pages (gh-pages Branch)
         uses: peaceiris/actions-gh-pages@v4
@@ -71,4 +82,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: allure-history
+          publish_dir: allure-report
