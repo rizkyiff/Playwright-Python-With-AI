@@ -126,4 +126,59 @@ Run dalam mode Headed / UI untuk debugging:
 ```powershell
 $env:HEADLESS="false"; .\.venv\Scripts\python.exe -m pytest web/tests --alluredir=allure-results
 ```
->>>>>>> 27558ce (feat: complete web automation setup and create company wizard test flow)
+
+Run berdasarkan tier marker:
+```powershell
+# Tier 1 saja (login & navigation)
+.\.venv\Scripts\python.exe -m pytest web/tests -m tier1 --alluredir=allure-results
+
+# Tier 2 saja (data mutation & field-level verification)
+.\.venv\Scripts\python.exe -m pytest web/tests -m tier2 --alluredir=allure-results
+```
+
+### 5. Parallel Execution (pytest-xdist)
+
+Framework ini mendukung eksekusi parallel menggunakan `pytest-xdist`. Setiap worker mendapatkan browser context terpisah.
+
+```powershell
+# Run dengan 2 parallel workers
+.\.venv\Scripts\python.exe -m pytest web/tests --alluredir=allure-results -n 2
+
+# Auto-detect jumlah CPU cores
+.\.venv\Scripts\python.exe -m pytest web/tests --alluredir=allure-results -n auto
+
+# Grouping per file (test dalam 1 file tidak dipecah antar worker)
+.\.venv\Scripts\python.exe -m pytest web/tests --alluredir=allure-results -n 2 --dist loadfile
+```
+
+> ⚠️ **Catatan**: Flag `-s` (live console output) tidak compatible dengan `pytest-xdist`. Saat run parallel, output console per-test akan di-capture dan ditampilkan setelah selesai. Untuk debugging dengan live output, jalankan tanpa `-n`.
+
+### 6. Generate & Open Allure Report
+
+Setelah menjalankan test suite, generate dan buka Allure Report secara lokal:
+
+```powershell
+# Generate report statis ke folder allure-report/
+allure generate allure-results -o allure-report --clean
+
+# Atau langsung serve & buka di browser (recommended)
+allure serve allure-results
+```
+
+> 💡 **Allure CLI** membutuhkan Java Runtime (JRE 8+). Install Allure CLI via:
+> ```powershell
+> # Via Scoop (Windows)
+> scoop install allure
+>
+> # Atau download manual dari https://github.com/allure-framework/allure2/releases
+> ```
+
+> 🌐 **Live Report (CI/CD)**: Report otomatis di-generate dan di-publish ke GitHub Pages pada setiap push ke `main`.
+> Akses di: [https://rizkyiff.github.io/Playwright-Python-With-AI/](https://rizkyiff.github.io/Playwright-Python-With-AI/)
+
+---
+
+## 📄 Dokumentasi Tambahan
+
+- [AI_USAGE.md](AI_USAGE.md) — Panduan & filosofi penggunaan AI pada framework ini
+- [PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md) — Arsitektur lengkap & alur eksekusi detail
