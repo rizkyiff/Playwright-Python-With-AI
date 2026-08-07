@@ -1,0 +1,2 @@
+[ROOT CAUSE]: Assertion condition failed.
+[RECOMMENDED FIX]: Inspect expected data vs actual DOM element content.

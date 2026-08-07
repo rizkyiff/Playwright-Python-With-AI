@@ -1,0 +1,2 @@
+[ROOT CAUSE]: Locator wait timeout exceeded.
+[RECOMMENDED FIX]: Verify element visibility in DOM or check if locator XPath requires contains(text(), ...).
