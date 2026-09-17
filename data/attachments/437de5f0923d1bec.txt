@@ -1,0 +1,2 @@
+[ROOT CAUSE]: KeyError encountered when accessing dictionary key.
+[RECOMMENDED FIX]: Verify variable/dictionary key spelling (e.g. check for typos like 'company_namea').
