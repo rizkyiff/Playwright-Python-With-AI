@@ -1,5 +1,5 @@
 "Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
-"broken","Wed Sep 23 05:25:28 UTC 2026","Wed Sep 23 05:26:01 UTC 2026","32807","web.tests","test_company","","","","test_create_company_and_verify_detail[chromium]","
+"broken","Thu Sep 24 05:42:46 UTC 2026","Thu Sep 24 05:42:46 UTC 2026","0","web.tests","test_company","","","","test_create_company_and_verify_detail[chromium]","
     Test Create Company & Tier 2 Field-by-Field Verification & Cleanup:
     1. Generate test data (deterministic fallback or AI schema-validated).
     2. Attach test data used to Allure report.
@@ -9,7 +9,7 @@
     6. Verify created company details field by field (Tier 2 assertion).
     7. Clean up by deleting the created company.
     "
-"passed","Wed Sep 23 05:26:01 UTC 2026","Wed Sep 23 05:26:04 UTC 2026","3601","web.tests","test_login","","","","test_login_success[chromium]","
+"broken","Thu Sep 24 05:43:17 UTC 2026","Thu Sep 24 05:43:17 UTC 2026","0","web.tests","test_login","","","","test_login_success[chromium]","
     Test login scenario:
     - Reuses session storage state
     - Navigates to eSuite
